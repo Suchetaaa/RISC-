@@ -132,23 +132,106 @@ architecture compute of data_path is
 	signal mem_data_out : std_logic_vector(15 downto 0);
 
 	--LM, SM instruction loop signal values 
+	signal PE_in : std_logic_vector(15 downto 0);
 	signal PE_out : std_logic_vector(15 downto 0);
 	--Inputs and outputs of AND gate present in the LM,SM circuit
 	signal AND_a : std_logic_vector(15 downto 0);
 	signal AND_b : std_logic_vector(15 downto 0);
 	signal AND_out : std_logic_vector(15 downto 0);
-	--Output of the decoder which is going into the AND gate
+	--Input and Output of the decoder which is going into the AND gate
+	signal decoder_in : std_logic_vector(15 downto 0);
 	signal decoder_out : std_logic_vector(15 downto 0);
+	--Incrementer input and output 
+	signal inc_in : std_logic_vector(15 downto 0);
+	signal inc_out : std_logic_vector(15 downto 0);
+	--Second zero flag 
+	signal zero_2_in : std_logic_1164;
+	signal zero_2_out : std_logic_1164;
 
 	--Sign extender output values 
 	signal SE6_out : std_logic_vector(15 downto 0);
 	signal SE9_out : std_logic_vector(15 downto 0);
+	signal data_extender9_out : std_logic_vector(15 downto 0);
+
+	--Constant for ALU (for PC + 1)
+	signal const_1 : std_logic_vector(15 downto 0) := (others => '0');
+	signal const_minus_1 : std_logic_vector(15 downto 0) := ();
+
+	--Instruction based signals 
+	signal instruction : std_logic_vector(15 downto 0);
+	signal instruction_operation : std_logic_1164;
+	signal instruction_carry : std_logic_1164;
+	signal instruction_zero : std_logic_1164;
 
 begin
 	
 	--Assigning values to the signals based on the input control signals given as port-in
 
 	--ALU inputs - a and b
+	alu_in_a <= PC_out when alu_a = "01" else
+		T1_data when alu_a = "10";
+
+	alu_in_b <= T2_data when alu_b = "010" else
+		const_1 when alu_b = "001" else
+		SE6_out when alu_b = "011" else
+		SE9_out when alu_b = "100" else
+		const_minus_1 when alu_b = "101"; 
+
+	--Temporary registers values based on the input control signals 
+	--T1
+	T1_data <= data1_read when t1 = "0" else
+		data2_read when t1 = "1";
+	--T2
+	T2_data <= data2_read when t2 = "0" else
+		SE6_out when t2 = "1";
+	--T4
+	T4_data <= instruction(7 downto 0) when t4 = "0" else
+		AND_out when t4 = "1";
+	--T5
+	T5_data <= instruction(11 downto 9) when t5 = "0" else
+		inc_out when t5 = "1";
+		
+	--Register file input values based on the control signals
+	--A1
+	adr1_read <= T6_data when rf_a1 = "0" else
+		instruction(11 downto 9) when rf_a1 = "1";
+	--A2
+	adr2_read <= instruction(8 downto 6);
+	--A3
+	adr3_write <= instruction(5 downto 3) when rf_a3 = "00" else
+		instruction(8 downto 6) when rf_a3 = "01" else
+		instruction(11 downto 9) when rf_a3 = "10" else
+		t6 when rf_a3 = "11";
+	--D3
+	data3_write <= data_extender9_out when rf_d3 = "00" else
+		T3_data when rf_d3 = "01" else
+		alu_out when rf_d3 = "10" else
+		mem_data_out when rf_d3 = "11";
+
+	--Memory signal values based on the control signals
+	mem_data_in <= data1_read;
+	mem_addr_in <= PC_out when mem_add = "00" else
+		T3_data when mem_add = "01" else
+		T5_data when mem_add = "10";
+
+	--Priority circuit values based on the control signals
+	PE_in <= T4_data;
+	T6_data <= PE_out;
+	AND_a <= T4_data;
+	AND_b <= decoder_out;
+	decoder_in <= PE_out;
+	zero_2_in <= AND_out;
+	inc_in <= T5_data;
+
+	--PC in and out signal values 
+	PC_in <= alu_out when pc_select = "01" else
+		T2_data when pc_select = "10";
+
+		
+
+
+
+
 	
 
 end architecture ; -- compute
