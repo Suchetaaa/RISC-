@@ -1,0 +1,2 @@
+Memory : 
+How to implement Memory in VHDL? How to store all the memory units basically? Array or is there some easy way? 
