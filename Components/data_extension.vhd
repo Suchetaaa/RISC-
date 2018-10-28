@@ -15,8 +15,6 @@ end entity ; -- sign_extender_6
 
 architecture DE of data_extension is
 
-	signal 
-
 begin
 data_out(8 downto 0) <= data_in(8 downto 0);
 data_out(15 downto 9) <= "0000000";

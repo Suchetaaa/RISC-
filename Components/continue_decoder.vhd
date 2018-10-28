@@ -15,8 +15,6 @@ end entity ; -- continue_decoder
 
 architecture CD of continue_decoder is
 
-	signal 
-
 begin
 	process(cz_condition, carry_flag, zero_flag)
 	variable continue_var := '0';

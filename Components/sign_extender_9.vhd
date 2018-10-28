@@ -15,8 +15,6 @@ end entity ; -- sign_extender_6
 
 architecture SE9 of sign_extender_9 is
 
-	signal 
-
 begin
 data_out(8 downto 0) <= data_in(8 downto 0);
 data_out(9) <= data_in(5);

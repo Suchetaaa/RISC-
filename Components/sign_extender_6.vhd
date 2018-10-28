@@ -15,7 +15,6 @@ end entity ; -- sign_extender_6
 
 architecture SE6 of sign_extender_6 is
 
-	signal 
 
 begin
 data_out(5 downto 0) <= data_in(5 downto 0);
