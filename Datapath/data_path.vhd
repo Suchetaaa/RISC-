@@ -69,7 +69,7 @@ entity data_path is
 	rst : in std_logic_1164;
 
 	--Instruction type -----------------------------------------//check
-	inst_type: out OperationCode;
+	inst_type: out std_logic_vector(3 downto 0);
 
 	--Data coming into datapath (for testbench only, no other purpose as such)
 	ext_address : n std_logic_vector(15 downto 0);
@@ -159,15 +159,15 @@ architecture compute of data_path is
 
 	--Instruction based signals 
 	signal instruction : std_logic_vector(15 downto 0);
-	signal instruction_operation : std_logic_1164;
-	signal instruction_carry : std_logic_1164;
-	signal instruction_zero : std_logic_1164;
+	signal instruction_operation : std_logic_vector(1 downto 0);
+	--signal instruction_carry : std_logic_1164;
+	--signal instruction_zero : std_logic_1164;
 
 begin
 	
 	--Assigning values to the signals based on the input control signals given as port-in
 
-	--ALU inputs - a and b
+	--ALU inputs - a and b (ADD ALU OPERATION)
 	alu_in_a <= PC_out when alu_a = "01" else
 		T1_data when alu_a = "10";
 
@@ -283,16 +283,40 @@ begin
 			);
 	ID : instruction_register
 		port map(
-
-			)
-
-
-		
-
-
-
-
-	
+			instruction => instruction,
+			instruction_operation => instruction_operation,
+			instruction_type => inst_type
+			);
+	--Register file port mapping 
+	RF : reg_file 
+		port map (
+			clk => clk,
+			reg_file_read => rf_read,
+			reg_file_write => rf_write,
+			PC_write_rf => pc_select,
+			address_1 => adr1_read,
+			address_2 => adr2_read,
+			address_3 => adr3_write,
+			data_in => data3_write,
+			data_out_1 => data1_read,
+			data_out_2 => data2_read
+			);
+	--ALU port mapping 
+	ALUu : ALU
+		port map(
+			alu_a => alu_in_a,
+			alu_b => alu_in_b,
+			alu_op => alu_operation,
+			alu_out => alu_out,
+			carry => alu_carryflag,
+			zero => alu_zeroflag
+			);
+	--Incrementer port mapping 
+	INC : incrementer 
+		port map (
+			data_in => inc_in,
+			data_out => inc_out
+		);
 
 end architecture ; -- compute
 
