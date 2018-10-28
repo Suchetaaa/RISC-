@@ -132,13 +132,4 @@ begin
 			data_out_2 <= reg_7;
 		end if;
 
-end architecture
-
-		
-
-
-
-
-
-
-end architecture ; -- rf
+end architecture  -- rf
