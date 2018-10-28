@@ -132,7 +132,7 @@ architecture compute of data_path is
 	signal mem_data_out : std_logic_vector(15 downto 0);
 
 	--LM, SM instruction loop signal values 
-	signal PE_in : std_logic_vector(15 downto 0);
+	signal PE_in : std_logic_vector(15 downto 0); --Not needed 
 	signal PE_out : std_logic_vector(15 downto 0);
 	--Inputs and outputs of AND gate present in the LM,SM circuit
 	signal AND_a : std_logic_vector(15 downto 0);
@@ -226,6 +226,55 @@ begin
 	--PC in and out signal values 
 	PC_in <= alu_out when pc_select = "01" else
 		T2_data when pc_select = "10";
+
+	--Port maps 
+	--Port map for continue decoder, gives an out signal continue_state which is used in checking for zero or carry flags when needed
+	CD : continue_decoder
+		port map (
+			cz_condition => instruction(1 downto 0),
+			carry_flag => alu_carryflag,
+			zero_flag => alu_zeroflag,
+			continue => continue_state 
+		);
+	--Port map for data extension
+	DE : data_extension
+		port map (
+			data_in => instruction(8 downto 0),
+			data_out => data_extender9_out
+		);
+	--Port map for sign extender 9
+	SE9 : sign_extender_9
+		port map (
+			data_in => instruction(8 downto 0),
+			data_out => SE9_out
+			);
+	--Port map for sign extender 6
+	SE6 : sign_extender_6
+		port map (
+			data_in => instruction(5 downto 0),
+			data_out => SE6_out
+			);
+	--Priority encoder 
+	PE : priority_encoder 
+		port map (
+			pe_in => PE_in,
+			pe_out => PE_out
+			);
+	--decoder port mapping 
+	Decoder_PM : decoder 
+		port map (
+			decoder_input => decoder_in,
+			decoder_output => decoder_out
+			);
+	--AND gate for priority circuit 
+	PE_AND : PE_and 
+		port map (
+			AND_input_1 => AND_a,
+			AND_input_2 => AND_b
+			AND_output => AND_out
+		);
+	
+
 
 		
 
