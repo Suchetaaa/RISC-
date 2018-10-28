@@ -273,7 +273,18 @@ begin
 			AND_input_2 => AND_b
 			AND_output => AND_out
 		);
-	
+	--Instruction register and decoder 
+	Inst_register : inst_register_data 
+		port map(
+			inst_in => mem_data_out,
+			inst_out => instruction,
+			inst_enable => ir_enable,
+			clk => clk
+			);
+	ID : instruction_register
+		port map(
+
+			)
 
 
 		
