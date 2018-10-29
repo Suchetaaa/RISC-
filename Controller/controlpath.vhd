@@ -73,91 +73,198 @@ entity controlpath is
 end entity;
 
 architecture struct of controlpath is
-	type FsmState is (S0_reset, S1_hkt, S2_bringregdata, S3_aluopcz, S4_writeback, S5_writebackrb S6_bringimm, S7_storemem, S8_loadfrommem, S9_aluopz, S10_storepc, S11_decpc, S12_pcoff6, S13_pcoff9, S14_t2pc, S15_lmloadreg, S16_checkz2, S17_smstoremem, S18_Pout, S19_dataext, S20_bringimm2);
+	type FsmState is (S0_reset, S1_hkt, S2_bringregdata, S3_aluopcz, S4_writeback, S5_writebackrb S6_bringimm, S7_storemem, S8_loadfrommem, S9_aluopz, S10_storepc, S11_decpc, S12_pcoff6, S13_pcoff9, S14_t2pc, S15_lmloadreg, S16_checkz2, S17_smstoremem, S18_pout, S19_dataext, S20_bringimm2, S21_alusubtract, S22_aluadd);
 	signal state: FsmState;
 begin
 	--determining next state
 	process(clk, rst, state, continue_state, loop_out, zero_out, carry_out, inst_type)
   		variable statenext: FsmState;
 	begin
-		statenext:=S0_reset;
+		statenext := S0_reset;
 	case state is
-		when S0_reset =>  -- First state whenever the code is loaded
-        	statenext := S1_hkt;   -- Always the first state of every instruction.
+		--PC points to this as soon as the microprocessor gets booted 
+		when S0_reset =>  
+			--First state of every instruction - Housekeeping task
+        	statenext := S1_hkt;   
 		when S1_hkt =>
-        	   if inst_type = '0000' or inst_type = '0100' then
-         	   statenext := S2_bringregdata;
-       		   elsif inst_type = '0111' or inst_type = '1000' then
-          	   statenext := S16_checkz2;
-        	   elsif inst_type = '0011' or inst_type = '0011' then
-         	   statenext := S6_bringimm;
-        	   elsif inst_type = '0101' or inst_type = '0110' then
-        	   statenext := S10_storepc;
-        	   elsif inst_type = '0010'
-		   statenext := S20_bringimm2;
-		   else
-		   statenext := S0_reset;
-                   end if;
-		when S2_bringregdata =>  -- For ALU operations: ADD,ADC,ADZ,NDU,NDZ,NDC
-		   if continue = '1' then
-		   statenext := S3_aluopcz;
-		   else 
-		   statenext := S1_hkt;
+			--For ADD instructions and NAND instructions and BEQ instruction
+        	if inst_type = '0000' or inst_type = '1100' or inst_type = '0010' then
+         		statenext := S2_bringregdata;
+         	--For LM and SM instructions
+       		elsif inst_type = '0111' or inst_type = '0110' then
+          		statenext := S16_checkz2;
+          	--SW instruction
+        	elsif inst_type = '0101' then
+         		statenext := S6_bringimm;
+         	--JAL and JLR instruction
+        	elsif inst_type = '1001' or inst_type = '1000' then
+        		statenext := S10_storepc;
+        	--LWI instruction
+        	elsif inst_type = '0100' then 
+		   		statenext := S20_bringimm2;
+		   	--ADI instruction 
+		   	elsif inst_type = '0001' then 
+		   		statenext := S6_bringimm;
+		   	--LHI instruction
+		   	elsif inst_type = '0011' then
+		   		statenext := S19_dataext;
+		   	else
+		   		statenext := S0_reset;
+            end if;
+		when S2_bringregdata =>  
+			--For AND, ADC, ADZ instructions
+		   	if inst_type = '0000' then 
+				if continue = '1' then
+		   			statenext := S3_aluopcz;
+		   		else 
+		   			statenext := S1_hkt;
+		   		end if;
+		   	end if;
+
+		   	--For NDU, NDC, NDZ instruction
+		   	if inst_type := '0010' then 
+		   		if continue = '1' then 
+		   			statenext := S9_aluopz;
+		   		else 
+		   			statenext := S1_hkt;
+		   		end if;
+		   	end if;
+
+		   	--BEQ instruction
+		   	if inst_type = '1100' then 
+		   		statenext := S21_alusubtract;
+		   	end if;
+
+		   	--JLR instruction 
+		   	if inst_type = '1001' then 
+		   		statenext := S14_t2pc;
+		   	end if;
+
 	----------statenext := S9_aluopz
 		when S3_aluopcz =>
-		statenext := S4_writeback;
+			--For ADC, ADZ, ADD instruction 
+			if inst_type = '0000' then 
+				statenext := S4_writeback;
+			end if;
+			--ADI instruction 
+			if inst_type = '0001' then 
+				statenext := S5_writebackrb;
+			end if;
+				
 	----------statenext := S5_writebackrb
-		when S4_writeback => --elementary instructions
-		statenext := S1_hkt;
+		--Last states for instruction
+		when S4_writeback => 
+			statenext := S1_hkt;
 		when S5_writebackrb => -- from ADI
-		statenext := S1_hkt;
-		when S6_bringimm => --from ADI
-		statenext := S3_aluopcz;
+			statenext := S1_hkt;
+
+		when S6_bringimm => 
+			--ADI instruction
+			if inst_type = '0001' then 
+				statenext := S3_aluopcz;
+			end if; 
+
+			--SW instruction 
+			if inst_type = '0101' then 
+				statenext := S22_aluadd;
+			end if; 
+
 	-----------statenext := S9_aluopz
-		when s7_storemem
-		statenext := S1_hkt; --from Sw
-		when S8_loadfrommem
-		statenext := S1_hkt; --from Lw
+		when s7_storemem =>
+			statenext := S1_hkt; --from SW
+		when S8_loadfrommem =>
+			statenext := S1_hkt; --from Lw
 		when S9_aluopz
-		statenext := S4_writeback;
+			statenext := S4_writeback;
 	-------------statenext := S8_loadfrommem
-		when S10_storepc
-		statenext := S13_pcoff9;
-		when S11_decpc
-		statenext := S1_hkt;
-		when S12_pcoff6
-		statenext := S11_decpc;
-		when S13_pcoff9
-		statenext := S1_hkt;
-		when S14_t2pc
-		statenext := S1_hkt;
-		when S15_lmloadreg
-		statenext := S1_hkt;
+		when S10_storepc =>
+			--JAL instruction 
+			if inst_type = '1000' then 
+				statenext := S13_pcoff9;
+			end if;
+
+			--JLR instruction 
+			if inst_type = '1001' then 
+				statenext := S2_bringregdata;
+			end if;
+
+		when S11_decpc =>
+			statenext := S1_hkt;
+
+		--BEQ instruction 
+		when S12_pcoff6 =>
+			statenext := S11_decpc;
+
+		--JAL instruction 
+		when S13_pcoff9 =>
+			statenext := S1_hkt;
+
+		--JLR instruction 
+		when S14_t2pc =>
+			statenext := S1_hkt;
+
+		--LM instruction 
+		when S15_lmloadreg =>
+			if loop_out = '1' then 
+				statenext := S1_hkt;
+			else
+				statenext := S18_pout;
+			end if;
+				
 	---------------statenext := S16_lmloadreg
-		when S16_checkz2
-		statenext := S1_hkt;
+		when S16_checkz2 =>
+			if loop_out = '1' then 
+				statenext := S1_hkt;
+			else 
+				statenext := S18_pout;
+			end if; 
 	----------------statenext := S15_lmloadreg;
-		when S17_smstoremem
-		statenext := S18_pout;
-		when S18_Pout
-		statenext := S1_hkt;
-		when S19_dataext
-		statenext := S1_hkt;
-		when S20_bringimm2
-		statenext := S9_aluopz;
+		when S17_smstoremem => 
+			if loop_out = '1' then 
+				statenext := S1_hkt;
+			else 
+				statenext := S18_pout;
+			end if;
+
+		when S18_pout =>
+			if inst_type = '0110' then 
+				statenext := S15_lmloadreg;
+			else 
+				statenext := S17_smstoremem;
+			end if;
+
+		--LHI instruction
+		when S19_dataext =>
+			statenext := S1_hkt;
+
+		when S20_bringimm2 =>
+			statenext := S22_aluadd;
+
+		when S21_alusubtract =>
+			if zero_out = '1' then 
+				statenext := S12_pcoff6;
+			else 
+				statenext := S1_hkt;
+			end if;
+
+		when S22_aluadd => 
+			--SW instruction and LW instructions respectively 
+			if inst_type = '0101' then 
+				statenext := S7_storemem;
+			else 
+				statenext := S8_loadfrommem; 
+			end if;
 	end case;
 
- if(clk'event and clk = '1') then
-      if(rst = '1') then
-        state <= S0_reset;
-      else
-        state <= nstate;
-      end if;
+	if (clk'event and clk = '1') then
+    	if (rst = '1') then
+        	state <= S0_reset;
+      	else
+        	state <= nstate;
+      	end if;
     end if;
-  end process;
+  	end process;
 		
-
-
 ------control signal assignments
 
 process(state, zero_flag, zero_out, rst, loop_out)
