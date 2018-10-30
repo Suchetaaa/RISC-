@@ -241,6 +241,7 @@ begin
 	decoder_in <= PE_out;
 	zero_2_in <= AND_out;
 	inc_in <= T5_data;
+	loop_out <= zero_2_out;
 
 	--PC in and out signal values 
 	PC_in <= alu_out when pc_select = "01" else
@@ -291,6 +292,13 @@ begin
 			AND_input_1 => AND_a,
 			AND_input_2 => AND_b
 			AND_output => AND_out
+		);
+
+	--PL_Zero 
+	PL_zero : PL_loopout 
+		port map (
+			PL_loopout_in => AND_output,
+			PL_loopout_out => zero_2_out
 		);
 	--Instruction register and decoder 
 	Inst_register : inst_register_data 
