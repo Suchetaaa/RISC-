@@ -267,7 +267,7 @@ begin
 		
 ------control signal assignments
 
-process(state, zero_flag, zero_out, rst, loop_out)
+process (state, zero_flag, zero_out, rst, loop_out)
 --Instruction Register signals
   	variable nir_enable : std_logic_1164;
   	variable npc_select : std_logic_vector(1 downto 0);
@@ -311,446 +311,511 @@ begin
 	nzero_en := '0';
 
 case state is
+
 	when S0_reset =>
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S1_hkt =>
-	nir_enable := '1';
-  	npc_select := '01';
-  	nalu_op := '11';
-  	nalu_a := '01';
-  	nalu_b := '001';
-	nmem_read := '1';
-------------------------------------------------------------------------
-  	nmem_add := '00';
-	nmem_write := '0';	 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0'; 
+		nir_enable := '1';
+	  	npc_select := '01';
+	  	nalu_op := '11';
+	  	nalu_a := '01';
+	  	nalu_b := '001';
+		nmem_read := '1';
+	  	nmem_add := '00';
+		nmem_write := '0';	 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0'; 
+
 	when S2_bringregdata =>
-	nrf_write := '1';
-	nrf_a1 := '1';
-----------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_read := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0'; 
+		nrf_write := '1';
+		nrf_a1 := '1';
+	----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_read := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0'; 
+
 	when S3_aluopcz =>
-	ncarry_en := '1';
-	nzero_en := '1';
-  	nalu_op := '10';
-  	nalu_a := '10';
-  	nalu_b := '010';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
+		ncarry_en := '1';
+		nzero_en := '1';
+	  	nalu_op := '10';
+	  	nalu_a := '10';
+	  	nalu_b := '010';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
 	
 	when S4_writeback =>
-	nrf_write : '1';
-	nrf_d3 : '01';
------------------------------------------------------------------------
-	nir_enable : '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a : '00';
-  	nalu_b : '000';
-  	nmem_add : '00';
-	nmem_write : '0';
-	nmem_read : '0'; 
-	nrf_read : '0';
-	nrf_a1 : '0';
-	nrf_a3 : '00';
-	nt1 : '0';
-	nt2 : '0';
-	nt4 : '0';
-	nt5 : '0';
-	ncarry_en : '0';
-	nzero_en : '0';
+		nrf_write : '1';
+		nrf_d3 : '01';
+	-----------------------------------------------------------------------
+		nir_enable : '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a : '00';
+	  	nalu_b : '000';
+	  	nmem_add : '00';
+		nmem_write : '0';
+		nmem_read : '0'; 
+		nrf_read : '0';
+		nrf_a1 : '0';
+		nrf_a3 : '00';
+		nt1 : '0';
+		nt2 : '0';
+		nt4 : '0';
+		nt5 : '0';
+		ncarry_en : '0';
+		nzero_en : '0';
+
 	when S5_writebackrb =>
-	nrf_a3 := '01';
-	nrf_d3 := '01';
-	nrf_write := '1';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nrf_a3 := '01';
+		nrf_d3 := '01';
+		nrf_write := '1';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S6_bringimm =>
-	nrf_read := '1';
-	nrf_a1 := '1';
-	nt2 := '1';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nrf_read := '1';
+		nrf_a1 := '1';
+		nt2 := '1';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S7_storemem =>
-	nrf_a1 := '1';
-	nrf_write := '1';
-  	nmem_add := '01';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_read := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nrf_a1 := '1';
+		nrf_write := '1';
+	  	nmem_add := '01';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_read := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S8_loadfrommem =>
-	nrf_a3 := '10';
-	nrf_d3 := '11';
-  	nmem_add := '01';
-	nmem_read := '1'; 
-	nrf_write := '1';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-	nmem_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nrf_a3 := '10';
+		nrf_d3 := '11';
+	  	nmem_add := '01';
+		nmem_read := '1'; 
+		nrf_write := '1';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+		nmem_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S9_aluopz =>
-  	nalu_op := '10';
-  	nalu_a := '10';
-  	nalu_b := '010';
-	ncarry_en := '1';
-------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	nzero_en := '0';
+	  	nalu_op := '10';
+	  	nalu_a := '10';
+	  	nalu_b := '010';
+		ncarry_en := '1';
+	------------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		nzero_en := '0';
+
 	when S10_storepc =>
-  	nalu_op := '01';
-  	nalu_a := '01';
-  	nalu_b := '001';
-	nrf_a3 := '10';
-	nrf_d3 := '10';
-	nrf_write := '1';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+	  	nalu_op := '01';
+	  	nalu_a := '01';
+	  	nalu_b := '001';
+		nrf_a3 := '10';
+		nrf_d3 := '10';
+		nrf_write := '1';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S11_decpc =>
-  	npc_select := '01';
-  	nalu_op := '01';
-  	nalu_a := '01';
-  	nalu_b := '001';
------------------------------------------------------------------------
-	nir_enable := '0';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+	  	npc_select := '01';
+	  	nalu_op := '01';
+	  	nalu_a := '01';
+	  	nalu_b := '001';
+	-----------------------------------------------------------------------
+		nir_enable := '0';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S12_pcoff6 =>
-  	npc_select := '01';
-  	nalu_op := '11';
-  	nalu_a := '01';
-  	nalu_b := '011';
-------------------------------------------------------------------------
-	nir_enable := '0';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+	  	npc_select := '01';
+	  	nalu_op := '11';
+	  	nalu_a := '01';
+	  	nalu_b := '011';
+	------------------------------------------------------------------------
+		nir_enable := '0';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S13_pcoff9 =>
-  	npc_select := '01';
-  	nalu_op := '11';
-  	nalu_a := '01';
-  	nalu_b := '100';
---------------------------------------------------------------------------
-	nir_enable := '0';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+	  	npc_select := '01';
+	  	nalu_op := '11';
+	  	nalu_a := '01';
+	  	nalu_b := '100';
+	--------------------------------------------------------------------------
+		nir_enable := '0';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S14_t2pc =>
-  	npc_select := '01';
----------------------------------------------------------------------
-	nir_enable := '0';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+	  	npc_select := '01';
+	---------------------------------------------------------------------
+		nir_enable := '0';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S15_lmloadreg =>
-	nrf_a3 := '11';
-	nrf_d3 := '11';
-  	nmem_add := '10';
-	nmem_read := '1'; 
-	nrf_write := '1';
-	nt4 := '1';
-	nt5 := '1';
-----------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-	nmem_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nt1 := '0';
-	nt2 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nrf_a3 := '11';
+		nrf_d3 := '11';
+	  	nmem_add := '10';
+		nmem_read := '1'; 
+		nrf_write := '1';
+		nt4 := '1';
+		nt5 := '1';
+	----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+		nmem_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nt1 := '0';
+		nt2 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S16_checkz2 =>
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S17_smstoremem =>
-	nt4 := '1';
-	nt5 := '1';
-  	nmem_add := '10';
-	nmem_write := '1';
-	nrf_read := '1';
--------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
-	when S18_Pout =>
-	nt4 := '1';
-----------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nt4 := '1';
+		nt5 := '1';
+	  	nmem_add := '10';
+		nmem_write := '1';
+		nrf_read := '1';
+	-------------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
+	when S18_pout =>
+		nt4 := '1';
+	----------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S19_dataext =>
-	nrf_write := '1';
-	nrf_a3 := '10';
--------------------------------------------------------------------------
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_read := '0';
-	nrf_a1 := '0';
-	nrf_d3 := '00';
-	nt1 := '0';
-	nt2 := '0';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nrf_write := '1';
+		nrf_a3 := '10';
+	-------------------------------------------------------------------------
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
 	when S20_bringimm2 =>
-	nt1 := '1';
-	nt2 := '1';
-	nrf_read := '1';
------------------------------------------------------------------------	
-	nir_enable := '0';
-  	npc_select := '00';
-  	nalu_op := '00';
-  	nalu_a := '00';
-  	nalu_b := '000';
-  	nmem_add := '00';
-	nmem_write := '0';
-	nmem_read := '0'; 
-	nrf_write := '0';
-	nrf_a1 := '0';
-	nrf_a3 := '00';
-	nrf_d3 := '00';
-	nt4 := '0';
-	nt5 := '0';
-	ncarry_en := '0';
-	nzero_en := '0';
+		nt1 := '1';
+		nt2 := '1';
+		nrf_read := '1';
+	-----------------------------------------------------------------------	
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nalu_op := '00';
+	  	nalu_a := '00';
+	  	nalu_b := '000';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+		nzero_en := '0';
+
+	when S21_alusubtract =>
+		nalu_a := '10';
+		nalu_b := '010';
+		nalu_op := '01';
+		nzero_en := '1'
+	-----------------------------------------------------------------------	
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+
+	when S22_aluadd =>
+		nalu_a := '10';
+		nalu_b := '010';
+		nalu_op := '11';
+		nzero_en := '1'
+	-----------------------------------------------------------------------	
+		nir_enable := '0';
+	  	npc_select := '00';
+	  	nmem_add := '00';
+		nmem_write := '0';
+		nmem_read := '0'; 
+		nrf_write := '0';
+		nrf_read := '0';
+		nrf_a1 := '0';
+		nrf_a3 := '00';
+		nrf_d3 := '00';
+		nt1 := '0';
+		nt2 := '0';
+		nt4 := '0';
+		nt5 := '0';
+		ncarry_en := '0';
+
+
 end case;
 
 if reset = '1'
