@@ -815,7 +815,6 @@ case state is
 		nt5 := '0';
 		ncarry_en := '0';
 
-
 end case;
 
 if reset = '1'

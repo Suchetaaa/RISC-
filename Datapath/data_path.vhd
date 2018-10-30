@@ -100,19 +100,29 @@ architecture compute of data_path is
 	signal alu_carryflag : std_logic_1164;
 	signal alu_zeroflag : std_logic_1164;
 
+	--Carry and zero registers 
+	signal carry_reg : std_logic_1164;
+	signal zero_reg : std_logic_1164;
+
 	--Signals for temporary registers 
 	--T1
-	signal T1_data : std_logic_vector(15 downto 0);
+	signal T1_data_in : std_logic_vector(15 downto 0);
+	signal T1_data_out : std_logic_vector(15 downto 0);
 	--T2
-	signal T2_data : std_logic_vector(15 downto 0);
+	signal T2_data_in : std_logic_vector(15 downto 0);
+	signal T2_data_out : std_logic_vector(15 downto 0);
 	--T3
-	signal T3_data : std_logic_vector(15 downto 0);
+	signal T3_data_in : std_logic_vector(15 downto 0);
+	signal T3_data_out : std_logic_vector(15 downto 0);
 	--T4
-	signal T4_data : std_logic_vector(15 downto 0);
+	signal T4_data_in : std_logic_vector(15 downto 0);
+	signal T4_data_out : std_logic_vector(15 downto 0);
 	--T5 
-	signal T5_data : std_logic_vector(15 downto 0);
+	signal T5_data_in : std_logic_vector(15 downto 0);
+	signal T5_data_out : std_logic_vector(15 downto 0);
 	--T6 
-	signal T6_data : std_logic_vector(15 downto 0);
+	signal T6_data_in : std_logic_vector(15 downto 0);
+	signal T6_data_out : std_logic_vector(15 downto 0);
 
 	--Register file signal/wire values
 	signal adr1_read : std_logic_vector(2 downto 0);
@@ -177,18 +187,27 @@ begin
 		SE9_out when alu_b = "100" else
 		const_minus_1 when alu_b = "101"; 
 
+	alu_operation <= instruction_operation when alu_op = '10' else
+		alu_op;
+
+	carry_reg <= alu_carryflag when carry_en = '1';
+
+	zero_reg <= alu_zeroflag when zero_en = '1';
+
 	--Temporary registers values based on the input control signals 
 	--T1
-	T1_data <= data1_read when t1 = "0" else
+	T1_data_in <= data1_read when t1 = "0" else
 		data2_read when t1 = "1";
 	--T2
-	T2_data <= data2_read when t2 = "0" else
+	T2_data_in <= data2_read when t2 = "0" else
 		SE6_out when t2 = "1";
+	--T3
+	T3_data_in <= alu_out;
 	--T4
-	T4_data <= instruction(7 downto 0) when t4 = "0" else
+	T4_data_in <= instruction(7 downto 0) when t4 = "0" else
 		AND_out when t4 = "1";
 	--T5
-	T5_data <= instruction(11 downto 9) when t5 = "0" else
+	T5_data_in <= instruction(11 downto 9) when t5 = "0" else
 		inc_out when t5 = "1";
 		
 	--Register file input values based on the control signals
@@ -316,6 +335,41 @@ begin
 		port map (
 			data_in => inc_in,
 			data_out => inc_out
+		);
+
+	T1 : register_data 
+		port map (
+			data_in => T1_data_in,
+			data_out => T1_data_out,
+			clk => clk
+		);
+
+	T2 : register_data 
+		port map (
+			data_in => T2_data_in,
+			data_out => T2_data_out,
+			clk => clk
+		);
+
+	T3 : register_data 
+		port map (
+			data_in => T3_data_in,
+			data_out => T3_data_out,
+			clk => clk
+		);
+
+	T4 : register_data 
+		port map (
+			data_in => T4_data_in,
+			data_out => T4_data_out,
+			clk => clk
+		);
+
+	T5 : register_data 
+		port map (
+			data_in => T5_data_in,
+			data_out => T5_data_out,
+			clk => clk
 		);
 
 end architecture ; -- compute
