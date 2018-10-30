@@ -165,7 +165,7 @@ architecture compute of data_path is
 
 	--Constant for ALU (for PC + 1)
 	signal const_1 : std_logic_vector(15 downto 0) := (others => '0');
-	signal const_minus_1 : std_logic_vector(15 downto 0) := (others => '1');
+	signal const_minus_1 : std_logic_vector(15 downto 0) := ();
 
 	--Instruction based signals 
 	signal instruction : std_logic_vector(15 downto 0);
@@ -187,7 +187,7 @@ begin
 		SE9_out when alu_b = "100" else
 		const_minus_1 when alu_b = "101"; 
 
-	alu_operation <= instruction_operation when alu_op = "10" else
+	alu_operation <= instruction_operation when alu_op = '10' else
 		alu_op;
 
 	carry_reg <= alu_carryflag when carry_en = '1';
@@ -290,7 +290,7 @@ begin
 	PE_AND : PE_and 
 		port map (
 			AND_input_1 => AND_a,
-			AND_input_2 => AND_b,
+			AND_input_2 => AND_b
 			AND_output => AND_out
 		);
 

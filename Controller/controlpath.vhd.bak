@@ -73,7 +73,7 @@ entity controlpath is
 end entity;
 
 architecture struct of controlpath is
-	type FsmState is (S0_reset, S1_hkt, S2_bringregdata, S3_aluopcz, S4_writeback, S5_writebackrb, S6_bringimm, S7_storemem, S8_loadfrommem, S9_aluopz, S10_storepc, S11_decpc, S12_pcoff6, S13_pcoff9, S14_t2pc, S15_lmloadreg, S16_checkz2, S17_smstoremem, S18_pout, S19_dataext, S20_bringimm2, S21_alusubtract, S22_aluadd);
+	type FsmState is (S0_reset, S1_hkt, S2_bringregdata, S3_aluopcz, S4_writeback, S5_writebackrb S6_bringimm, S7_storemem, S8_loadfrommem, S9_aluopz, S10_storepc, S11_decpc, S12_pcoff6, S13_pcoff9, S14_t2pc, S15_lmloadreg, S16_checkz2, S17_smstoremem, S18_pout, S19_dataext, S20_bringimm2, S21_alusubtract, S22_aluadd);
 	signal state: FsmState;
 begin
 	--determining next state
@@ -88,33 +88,33 @@ begin
         	statenext := S1_hkt;   
 		when S1_hkt =>
 			--For ADD instructions and NAND instructions and BEQ instruction
-        	if inst_type = "0000" or inst_type = "1100" or inst_type = "0010" then
+        	if inst_type = '0000' or inst_type = '1100' or inst_type = '0010' then
          		statenext := S2_bringregdata;
          	--For LM and SM instructions
-       		elsif inst_type = "0111" or inst_type = "0110" then
+       		elsif inst_type = '0111' or inst_type = '0110' then
           		statenext := S16_checkz2;
           	--SW instruction
-        	elsif inst_type = "0101" then
+        	elsif inst_type = '0101' then
          		statenext := S6_bringimm;
          	--JAL and JLR instruction
-        	elsif inst_type = "1001" or inst_type = "1000" then
+        	elsif inst_type = '1001' or inst_type = '1000' then
         		statenext := S10_storepc;
         	--LWI instruction
-        	elsif inst_type = "0100" then 
+        	elsif inst_type = '0100' then 
 		   		statenext := S20_bringimm2;
 		   	--ADI instruction 
-		   	elsif inst_type = "0001" then 
+		   	elsif inst_type = '0001' then 
 		   		statenext := S6_bringimm;
 		   	--LHI instruction
-		   	elsif inst_type = "0011" then
+		   	elsif inst_type = '0011' then
 		   		statenext := S19_dataext;
 		   	else
 		   		statenext := S0_reset;
             end if;
 		when S2_bringregdata =>  
 			--For AND, ADC, ADZ instructions
-		   	if inst_type = "0000" then 
-				if continue = "1" then
+		   	if inst_type = '0000' then 
+				if continue = '1' then
 		   			statenext := S3_aluopcz;
 		   		else 
 		   			statenext := S1_hkt;
@@ -122,8 +122,8 @@ begin
 		   	end if;
 
 		   	--For NDU, NDC, NDZ instruction
-		   	if inst_type = "0010" then 
-		   		if continue = "1" then 
+		   	if inst_type := '0010' then 
+		   		if continue = '1' then 
 		   			statenext := S9_aluopz;
 		   		else 
 		   			statenext := S1_hkt;
@@ -131,23 +131,23 @@ begin
 		   	end if;
 
 		   	--BEQ instruction
-		   	if inst_type = "1100" then 
+		   	if inst_type = '1100' then 
 		   		statenext := S21_alusubtract;
 		   	end if;
 
 		   	--JLR instruction 
-		   	if inst_type = "1001" then 
+		   	if inst_type = '1001' then 
 		   		statenext := S14_t2pc;
 		   	end if;
 
 	----------statenext := S9_aluopz
 		when S3_aluopcz =>
 			--For ADC, ADZ, ADD instruction 
-			if inst_type = "0000" then 
+			if inst_type = '0000' then 
 				statenext := S4_writeback;
 			end if;
 			--ADI instruction 
-			if inst_type = "0001" then 
+			if inst_type = '0001' then 
 				statenext := S5_writebackrb;
 			end if;
 				
@@ -160,12 +160,12 @@ begin
 
 		when S6_bringimm => 
 			--ADI instruction
-			if inst_type = "0001" then 
+			if inst_type = '0001' then 
 				statenext := S3_aluopcz;
 			end if; 
 
 			--SW instruction 
-			if inst_type = "0101" then 
+			if inst_type = '0101' then 
 				statenext := S22_aluadd;
 			end if; 
 
@@ -174,17 +174,17 @@ begin
 			statenext := S1_hkt; --from SW
 		when S8_loadfrommem =>
 			statenext := S1_hkt; --from Lw
-		when S9_aluopz =>
+		when S9_aluopz
 			statenext := S4_writeback;
 	-------------statenext := S8_loadfrommem
 		when S10_storepc =>
 			--JAL instruction 
-			if inst_type = "1000" then 
+			if inst_type = '1000' then 
 				statenext := S13_pcoff9;
 			end if;
 
 			--JLR instruction 
-			if inst_type = "1001" then 
+			if inst_type = '1001' then 
 				statenext := S2_bringregdata;
 			end if;
 
@@ -227,7 +227,7 @@ begin
 			end if;
 
 		when S18_pout =>
-			if inst_type = "0110" then 
+			if inst_type = '0110' then 
 				statenext := S15_lmloadreg;
 			else 
 				statenext := S17_smstoremem;
@@ -249,7 +249,7 @@ begin
 
 		when S22_aluadd => 
 			--SW instruction and LW instructions respectively 
-			if inst_type = "0101" then 
+			if inst_type = '0101' then 
 				statenext := S7_storemem;
 			else 
 				statenext := S8_loadfrommem; 
@@ -291,7 +291,7 @@ process (state, zero_flag, zero_out, rst, loop_out)
 begin
 
 	nir_enable := '0';
-  	npc_select := "00";
+  	npc_select := '00';
   	nalu_op := '00';
   	nalu_a := '00';
   	nalu_b := '000';
@@ -301,7 +301,7 @@ begin
 	nrf_write := '0';
 	nrf_read := '0';
 	nrf_a1 := '0';
-	nrf_a3 := "00";
+	nrf_a3 := '00';
 	nrf_d3 := '00';
 	nt1 := '0';
 	nt2 := '0';
