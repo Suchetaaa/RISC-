@@ -16,6 +16,8 @@ end entity ; -- register_data
 
 architecture Reg_data of register_data is
 
+	signal 
+
 begin
  
 	process (clk)

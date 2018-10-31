@@ -12,7 +12,7 @@ entity PE_and is
   ) ;
 end entity ; -- PE_and
 
-architecture AND_loop of PE_and is
+architecture AND of PE_and is
 begin
 	AND_output <= AND_input_1 and AND_input_2;
 

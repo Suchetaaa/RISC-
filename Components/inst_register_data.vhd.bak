@@ -17,6 +17,8 @@ end entity ; -- register_data
 
 architecture IR_inst of inst_register_data is
 
+	signal 
+
 begin
 
 	process(clk) 

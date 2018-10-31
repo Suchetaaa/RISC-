@@ -80,50 +80,56 @@ begin
 		--Writing to registers done!!!
 	end process;
 
-	process(reg_file_read, address_1, address_2)
-	variable data_out_1_var : std_logic_vector(15 downto 0);
-	variable data_out_2_var : std_logic_vector(15 downto 0);
-	begin
 	--Reading from registers can happen anytime, so no process
-	if reg_file_read = "1" then
+	if (reg_file_read = '1')
 		if address_1 = "000" then
-			data_out_1_var := reg_0;
-		elsif address_1 = "001" then
-			data_out_1_var := reg_1;
-		elsif address_1 = "010" then
-			data_out_1_var := reg_2;
-		elsif address_1 = "011" then
-			data_out_1_var := reg_3;
-		elsif address_1 = "100" then
-			data_out_1_var := reg_4;
-		elsif address_1 = "101" then
-			data_out_1_var := reg_5;
-		elsif address_1 = "110" then
-			data_out_1_var := reg_6;
-		elsif address_1 = "111" then
-			data_out_1_var := reg_7;
+			data_out_1 <= reg_0;
+		end if;
+		if address_1 = "001" then
+			data_out_1 <= reg_1;
+		end if;
+		if address_1 = "010" then
+			data_out_1 <= reg_2;
+		end if;
+		if address_1 = "011" then
+			data_out_1 <= reg_3;
+		end if;
+		if address_1 = "100" then
+			data_out_1 <= reg_4;
+		end if;
+		if address_1 = "101" then
+			data_out_1 <= reg_5;
+		end if;
+		if address_1 = "110" then
+			data_out_1 <= reg_6;
+		end if;
+		if address_1 = "111" then
+			data_out_1 <= reg_7;
 		end if;
 		--Address 2 
 		if address_2 = "000" then
-			data_out_2_var := reg_0;
-		elsif address_2 = "001" then
-			data_out_2_var := reg_1;
-		elsif address_2 = "010" then
-			data_out_2_var := reg_2;
-		elsif address_2 = "011" then
-			data_out_2_var := reg_3;
-		elsif address_2 = "100" then
-			data_out_2_var := reg_4;
-		elsif address_2 = "101" then
-			data_out_2_var := reg_5;
-		elsif address_2 = "110" then
-			data_out_2_var := reg_6;
-		elsif address_2 = "111" then
-			data_out_2_var := reg_7;
+			data_out_2 <= reg_0;
 		end if;
-	end if;
-	data_out_1 <= data_out_1_var;
-	data_out_2 <= data_out_2_var;
-	end process;
+		if address_2 = "001" then
+			data_out_2 <= reg_1;
+		end if;
+		if address_2 = "010" then
+			data_out_2 <= reg_2;
+		end if;
+		if address_2 = "011" then
+			data_out_2 <= reg_3;
+		end if;
+		if address_2 = "100" then
+			data_out_2 <= reg_4;
+		end if;
+		if address_2 = "101" then
+			data_out_2 <= reg_5;
+		end if;
+		if address_2 = "110" then
+			data_out_2 <= reg_6;
+		end if;
+		if address_2 = "111" then
+			data_out_2 <= reg_7;
+		end if;
 
-end architecture; -- rf
+end architecture  -- rf

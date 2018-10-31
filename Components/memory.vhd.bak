@@ -29,6 +29,7 @@ end entity ; -- memory
 
 architecture memroy_comp of memory is
 
+	signal 
 
 begin
 

@@ -425,11 +425,11 @@ case state is
 		nrf_d3 := "01";
 		nrf_write := "1";
 	-----------------------------------------------------------------------
-		nir_enable := ""0";
+		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
 	  	nalu_a := "00";
-	  	nalu_b := "000"";
+	  	nalu_b := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -775,7 +775,7 @@ case state is
 		nalu_a := "10";
 		nalu_b := "010";
 		nalu_op := "01";
-		nzero_en := "1"
+		nzero_en := "1";
 	-----------------------------------------------------------------------	
 		nir_enable := "0";
 	  	npc_select := "00";
@@ -797,7 +797,7 @@ case state is
 		nalu_a := "10";
 		nalu_b := "010";
 		nalu_op := "11";
-		nzero_en := "1"
+		nzero_en := "1";
 	-----------------------------------------------------------------------	
 		nir_enable := "0";
 	  	npc_select := "00";
@@ -817,7 +817,7 @@ case state is
 
 end case;
 
-if reset = "1"
+if reset = "1" then
 	ir_enable <= nir_enable;
   	pc_select <= npc_select;
   	alu_op <= nalu_op;
@@ -837,7 +837,6 @@ if reset = "1"
 	t5 <= nt5;
 	carry_en <= ncarry_en;
 	zero <= nzero_en;
-else
 end if;
 end process;
 end struct;

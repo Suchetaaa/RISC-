@@ -14,6 +14,7 @@ end entity ; -- PE_loopout
 architecture arch of PE_loopout is
 
 begin
-	pe_out <= "1" when pe_loopout_in = "0000000000000000" else "0";
+	pe_out <= 1 when pe_loopout_in = '0000000000000000' else
+		0;
 
 end architecture ; -- arch

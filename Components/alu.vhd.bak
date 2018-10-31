@@ -13,10 +13,10 @@ entity ALU is
 end entity;
 
 architecture structure of ALU is 	
-	signal outputalu : std_logic_vector(15 downto 0);
-	signal two1 : std_logic_vector(15 downto 0);
-	signal two2 : std_logic_vector(15 downto 0);
-	signal twoadd : std_logic_vector(15 downto 0);
+	signal outputalu : in std_logic_vector(15 downto 0);
+	signal two1 : in std_logic_vector(15 downto 0);
+	signal two2 : in std_logic_vector(15 downto 0);
+	signal twoadd : in std_logic_vector(15 downto 0);
 begin
    two: twoc
         port map (
