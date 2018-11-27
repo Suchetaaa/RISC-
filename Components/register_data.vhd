@@ -17,7 +17,7 @@ end entity ; -- register_data
 architecture Reg_data of register_data is
 
 begin
- 
+ 	-- Clock as writing happens only at the clock edge!!
 	process (clk)
 	begin 
 		if (clk'event and clk = '1') then 

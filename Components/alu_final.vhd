@@ -2,13 +2,18 @@ library std;
 library ieee;
 use ieee.std_logic_1164.all;
 library work;
-use work.ProcessorComponents.all;
+use work.components_init.all;
 
 entity ALU is
   port (
 	
 	alu_a : in std_logic_vector(15 downto 0);
 	alu_b : in std_logic_vector(15 downto 0);
+
+	--Carries the operation ALU has to perform
+	--00 - NAND 
+	--01 - Subtraction
+	--11 - Addition
 	alu_op : in std_logic_vector(1 downto 0);
 	alu_out : out std_logic_vector(15 downto 0);
 	carry : out std_logic_1164;
@@ -33,15 +38,15 @@ begin
 	process(alu_a, alu_b, alu_op)
 	begin 
 		if alu_op = "00" then 
-			alu_out_sig := alu_a nand alu_b;
+			alu_out_sig <= alu_a nand alu_b;
 			neg_addition <= "0000000000000000";
 		end if;
 		if alu_op = "01" then 
-			alu_out_sig := std_logic_vector(unsigned(alu_a) + unsigned(negative_b));
+			alu_out_sig <= std_logic_vector(unsigned(alu_a) + unsigned(negative_b));
 			neg_addition <= std_logic_vector(unsigned(negative_a) + unsigned(alu_b));
 		end if;
 		if alu_op = "11" then 
-			alu_out_sig := std_logic_vector(unsigned(alu_a) + unsigned(alu_b));
+			alu_out_sig <= std_logic_vector(unsigned(alu_a) + unsigned(alu_b));
 			neg_addition <= std_logic_vector(unsigned(negative_a) + unsigned(negative_b));
 		end if;
 	end process;

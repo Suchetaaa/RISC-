@@ -1,8 +1,6 @@
 library std;
 library ieee;
 use ieee.std_logic_1164.all;
-library work;
-use work.ProcessorComponents.all;
 
 entity continue_decoder is
   port (
@@ -20,17 +18,16 @@ begin
 	variable continue_var : std_logic_1164 := '0';
 	begin
 		if cz_condition = "00" then 
-			continue := '1';
+			continue_var := '1';
 		end if;
 		if cz_condition = "10" then 
-			continue := carry_flag;
+			continue_var := carry_flag;
 		end if;
 		if cz_condition = "01" then 
-			continue := zero_flag;
+			continue_var := zero_flag;
 		end if;
-		if cz_condition = "11" then 
-			continue := zero_flag and carry_flag;
-		end if;
+		continue <= continue_var;
 	end process;
+
 
 end architecture ; -- CD

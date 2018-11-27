@@ -15,12 +15,12 @@ entity controlpath is
   	-- ALU Operation signals
   	alu_op : out std_logic_vector(1 downto 0);
   	-- ALU - a
-  	alu_a : out std_logic_vector(1 downto 0);
+  	alu_a_select : out std_logic_vector(1 downto 0);
   	-- ALU - b
-  	alu_b : out std_logic_vector(2 downto 0);
+  	alu_b_select : out std_logic_vector(2 downto 0);
 
   	--Memory address select signals
-  	mem_add : out std_logic_vector(1 downto 0);
+  	mem_add_select : out std_logic_vector(1 downto 0);
 	--Memory read and write signals
 	mem_write : out std_logic_1164;
 	mem_read : out std_logic_1164;
@@ -29,11 +29,11 @@ entity controlpath is
 	rf_write : out std_logic_1164;
 	rf_read : out std_logic_1164;
 	-- Register file - A1
-	rf_a1 : out std_logic_1164;
+	rf_a1_select : out std_logic_1164;
 	-- Register file - A3
-	rf_a3 : out std_logic_vector(1 downto 0);
+	rf_a3_select : out std_logic_vector(1 downto 0);
 	-- Register file - D3
-	rf_d3 : out std_logic_vector(1 downto 0);
+	rf_d3_select : out std_logic_vector(1 downto 0);
 
 	--Temporary Registers control signals 
 	--T1
@@ -272,8 +272,8 @@ process (state, zero_flag, zero_out, rst, loop_out)
   	variable nir_enable : std_logic_1164;
   	variable npc_select : std_logic_vector(1 downto 0);
   	variable nalu_op : std_logic_vector(1 downto 0);
-  	variable nalu_a : std_logic_vector(1 downto 0);
-  	variable nalu_b : std_logic_vector(2 downto 0);
+  	variable nalu_a_select : std_logic_vector(1 downto 0);
+  	variable nalu_b_select : std_logic_vector(2 downto 0);
   	variable nmem_add : std_logic_vector(1 downto 0);
 	variable nmem_write : std_logic_1164;
 	variable nmem_read : std_logic_1164; 
@@ -293,8 +293,8 @@ begin
 	nir_enable := "0";
   	npc_select := "00";
   	nalu_op := "00";
-  	nalu_a := "00";
-  	nalu_b := "000";
+  	nalu_a_select := "00";
+  	nalu_b_select := "000";
   	nmem_add := "00";
 	nmem_write := "0";
 	nmem_read := "0"; 
@@ -316,8 +316,8 @@ case state is
 		nir_enable := "0";
   		npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -337,8 +337,8 @@ case state is
 		nir_enable := "1";
 	  	npc_select := "01";
 	  	nalu_op := "11";
-	  	nalu_a := "01";
-	  	nalu_b := "001";
+	  	nalu_a_select := "01";
+	  	nalu_b_select := "001";
 		nmem_read := "1";
 	  	nmem_add := "00";
 		nmem_write := "0";	 
@@ -361,8 +361,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -380,8 +380,8 @@ case state is
 		ncarry_en := "1";
 		nzero_en := "1";
 	  	nalu_op := "10";
-	  	nalu_a := "10";
-	  	nalu_b := "010";
+	  	nalu_a_select := "10";
+	  	nalu_b_select := "010";
 	-----------------------------------------------------------------------
 		nir_enable := "0";
 	  	npc_select := "00";
@@ -405,8 +405,8 @@ case state is
 		nir_enable : "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a : "00";
-	  	nalu_b : "000";
+	  	nalu_a_select : "00";
+	  	nalu_b_select : "000";
 	  	nmem_add : "00";
 		nmem_write : "0";
 		nmem_read : "0"; 
@@ -428,8 +428,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -450,8 +450,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -472,8 +472,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 		nmem_write := "0";
 		nmem_read := "0"; 
 		nrf_read := "0";
@@ -496,8 +496,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 		nmem_write := "0";
 		nrf_read := "0";
 		nrf_a1 := "0";
@@ -510,8 +510,8 @@ case state is
 
 	when S9_aluopz =>
 	  	nalu_op := "10";
-	  	nalu_a := "10";
-	  	nalu_b := "010";
+	  	nalu_a_select := "10";
+	  	nalu_b_select := "010";
 		ncarry_en := "1";
 	------------------------------------------------------------------------
 		nir_enable := "0";
@@ -532,8 +532,8 @@ case state is
 
 	when S10_storepc =>
 	  	nalu_op := "01";
-	  	nalu_a := "01";
-	  	nalu_b := "001";
+	  	nalu_a_select := "01";
+	  	nalu_b_select := "001";
 		nrf_a3 := "10";
 		nrf_d3 := "10";
 		nrf_write := "1";
@@ -555,8 +555,8 @@ case state is
 	when S11_decpc =>
 	  	npc_select := "01";
 	  	nalu_op := "01";
-	  	nalu_a := "01";
-	  	nalu_b := "001";
+	  	nalu_a_select := "01";
+	  	nalu_b_select := "001";
 	-----------------------------------------------------------------------
 		nir_enable := "0";
 	  	nmem_add := "00";
@@ -577,8 +577,8 @@ case state is
 	when S12_pcoff6 =>
 	  	npc_select := "01";
 	  	nalu_op := "11";
-	  	nalu_a := "01";
-	  	nalu_b := "011";
+	  	nalu_a_select := "01";
+	  	nalu_b_select := "011";
 	------------------------------------------------------------------------
 		nir_enable := "0";
 	  	nmem_add := "00";
@@ -599,8 +599,8 @@ case state is
 	when S13_pcoff9 =>
 	  	npc_select := "01";
 	  	nalu_op := "11";
-	  	nalu_a := "01";
-	  	nalu_b := "100";
+	  	nalu_a_select := "01";
+	  	nalu_b_select := "100";
 	--------------------------------------------------------------------------
 		nir_enable := "0";
 	  	nmem_add := "00";
@@ -623,8 +623,8 @@ case state is
 	---------------------------------------------------------------------
 		nir_enable := "0";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -652,8 +652,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 		nmem_write := "0";
 		nrf_read := "0";
 		nrf_a1 := "0";
@@ -666,8 +666,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -693,8 +693,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 		nmem_read := "0"; 
 		nrf_write := "0";
 		nrf_a1 := "0";
@@ -711,8 +711,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -734,8 +734,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -757,8 +757,8 @@ case state is
 		nir_enable := "0";
 	  	npc_select := "00";
 	  	nalu_op := "00";
-	  	nalu_a := "00";
-	  	nalu_b := "000";
+	  	nalu_a_select := "00";
+	  	nalu_b_select := "000";
 	  	nmem_add := "00";
 		nmem_write := "0";
 		nmem_read := "0"; 
@@ -772,8 +772,8 @@ case state is
 		nzero_en := "0";
 
 	when S21_alusubtract =>
-		nalu_a := "10";
-		nalu_b := "010";
+		nalu_a_select := "10";
+		nalu_b_select := "010";
 		nalu_op := "01";
 		nzero_en := "1";
 	-----------------------------------------------------------------------	
@@ -794,8 +794,8 @@ case state is
 		ncarry_en := "0";
 
 	when S22_aluadd =>
-		nalu_a := "10";
-		nalu_b := "010";
+		nalu_a_select := "10";
+		nalu_b_select := "010";
 		nalu_op := "11";
 		nzero_en := "1";
 	-----------------------------------------------------------------------	
@@ -821,16 +821,16 @@ if reset = "1" then
 	ir_enable <= nir_enable;
   	pc_select <= npc_select;
   	alu_op <= nalu_op;
-  	alu_a <= nalu_a;
-  	alu_b <= nalu_b;
-  	mem_add <= nmem_add;
+  	alu_a_select <= nalu_a_select;
+  	alu_b_select <= nalu_b_select;
+  	mem_add_select <= nmem_add;
 	mem_write <= nmem_write;
 	mem_read <= nmem_read; 
 	rf_write <= nrf_write;
 	rf_read <= nrf_read;
-	rf_a1 <= nrf_a1;
-	rf_a3 <= nrf_a3;
-	rf_d3 <= nrf_d3;
+	rf_a1_select <= nrf_a1;
+	rf_a3_select <= nrf_a3;
+	rf_d3_select <= nrf_d3;
 	t1 <= nt1;
 	t2<= nt2;
 	t4 <= nt4;

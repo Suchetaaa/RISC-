@@ -2,7 +2,7 @@ library std;
 library ieee;
 use ieee.std_logic_1164.all;
 library work;
-use work.ProcessorComponents.all;
+use work.components_init.all;
 
 --All the signals you want from the instruction used for next state logic, branches etc
 --Takes in the instruction and gives the necessary information about the instruction 
@@ -11,8 +11,8 @@ entity instruction_register is
 	--Doesnt need a clock, just a decoder type of circuit 
 	instruction : in std_logic_vector(15 downto 0);
 	instruction_operation : out std_logic_vector(1 downto 0);
-	--instruction_carry : out std_logic_1164;
-	--instruction_zero : out std_logic_1164
+	instruction_carry : out std_logic_1164;
+	instruction_zero : out std_logic_1164
 	instruction_type : out std_logic_vector(3 downto 0)
   ) ;
 end entity ; -- instruction_register
@@ -36,29 +36,29 @@ architecture IR of instruction_register is
 begin
 	OP <= instruction(15 downto 12);
 	process(OP)
-	--variable carry_variable : std_logic_1164 := '0';
-	--variable zero_variable : std_logic_1164 := '0';
-	variable inst_op_variable : std_logic_vector(1 downto 0) := "11"; --Some value
+	variable carry_variable : std_logic_1164 := '0';
+	variable zero_variable : std_logic_1164 := '0';
+	variable inst_op_variable : std_logic_vector(1 downto 0) := "10"; --None operation
 	begin 
 		if OP = "0000" or OP = "0001" then 
-			--carry_variable := '1';
-			--zero_variable := '1';
+			carry_variable := '1';
+			zero_variable := '1';
 			inst_op_variable := "11";
 		end if;
 		if OP = "0010" then
-			--carry_variable := '0';
-			--zero_variable := '1';
+			carry_variable := '0';
+			zero_variable := '1';
 			inst_op_variable := "00";
 		end if;
-		--instruction_carry <= carry_variable;
-		--instruction_zero <= zero_variable;
+		instruction_carry <= carry_variable;
+		instruction_zero <= zero_variable;
 		instruction_operation <= inst_op_variable;
 	end process;
 
 	process(OP)
 	variable inst_type_variable : std_logic_vector(3 downto 0);
 	begin 
-		if OP = "0000" or OP = "0010" then 
+		if OP = "0000" or OP = "0010" then --AND and NAND instructions
 			inst_type_variable := "0000";
 		elsif OP = "0001" then 
 			inst_type_variable := "0001"; --ADI instruction

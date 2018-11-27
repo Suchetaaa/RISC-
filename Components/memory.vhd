@@ -2,7 +2,7 @@ library std;
 library ieee;
 use ieee.std_logic_1164.all;
 library work;
-use work.ProcessorComponents.all;
+use work.components_init.all;
 
 --Memory basically takes in the memory read and write signals along with the data in(if needed) and address in to give out data(if needed)
 entity memory is
@@ -169,13 +169,13 @@ begin
 			memory_block(126) <= "0000000000000000";
 			memory_block(127) <= "0000000000000000";
 		
-		elsif (memory_write = '1') then
+		if (memory_write = '1') then
 			memory_block(to_integer(unsigned(address_in(3 downto 0)))) <= data_in;
 
-		data_out <= memory_block(to_integer(unsigned(address_in(3 downto 0))));
-
 		end if;
 		end if;
+		end if;
+		data_out <= memory_block(to_integer(unsigned(address_in(3 downto 0)))); -- default 
 
 	end process;
 

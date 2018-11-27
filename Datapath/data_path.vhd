@@ -2,7 +2,7 @@ library std;
 library ieee;
 use ieee.std_logic_1164.all;
 library work;
-use work.ProcessorComponents.all;
+use work.components_init.all;
 
 entity data_path is
   port (
@@ -16,12 +16,12 @@ entity data_path is
   	-- ALU Operation signals
   	alu_op : in std_logic_vector(1 downto 0);
   	-- ALU - a
-  	alu_a : in std_logic_vector(1 downto 0);
+  	alu_a_select : in std_logic_vector(1 downto 0);
   	-- ALU - b
-  	alu_b : in std_logic_vector(2 downto 0);
+  	alu_b_select : in std_logic_vector(2 downto 0);
 
   	--Memory address select signals
-  	mem_add : in std_logic_vector(1 downto 0);
+  	mem_add_select : in std_logic_vector(1 downto 0);
 	--Memory read and write signals
 	mem_write : in std_logic_1164;
 	mem_read : in std_logic_1164;
@@ -30,11 +30,11 @@ entity data_path is
 	rf_write : in std_logic_1164;
 	rf_read : in std_logic_1164;
 	-- Register file - A1
-	rf_a1 : in std_logic_1164;
+	rf_a1_select : in std_logic_1164;
 	-- Register file - A3
-	rf_a3 : in std_logic_vector(1 downto 0);
+	rf_a3_select : in std_logic_vector(1 downto 0);
 	-- Register file - D3
-	rf_d3 : in std_logic_vector(1 downto 0);
+	rf_d3_select : in std_logic_vector(1 downto 0);
 
 	--Temporary Registers control signals 
 	--T1
@@ -72,7 +72,7 @@ entity data_path is
 	inst_type: out std_logic_vector(3 downto 0);
 
 	--Data coming into datapath (for testbench only, no other purpose as such)
-	ext_address : n std_logic_vector(15 downto 0);
+	ext_address : std_logic_vector(15 downto 0);
 	ext_data: in std_logic_vector(15 downto 0);
     ext_memorywrite_enable: in std_logic_1164;
     ext_pc: out std_logic_vector(15 downto 0);
@@ -170,22 +170,24 @@ architecture compute of data_path is
 	--Instruction based signals 
 	signal instruction : std_logic_vector(15 downto 0);
 	signal instruction_operation : std_logic_vector(1 downto 0);
-	--signal instruction_carry : std_logic_1164;
-	--signal instruction_zero : std_logic_1164;
+	signal instruction_carry : std_logic_1164;
+	signal instruction_zero : std_logic_1164;
 
 begin
 	
 	--Assigning values to the signals based on the input control signals given as port-in
 
 	--ALU inputs - a and b (ADD ALU OPERATION)
-	alu_in_a <= PC_out when alu_a = "01" else
-		T1_data when alu_a = "10";
+	alu_in_a <= PC_out when alu_a_select = "01" else
+		T1_data when alu_a_select = "10" else 
+		const_1; -- default 
 
-	alu_in_b <= T2_data when alu_b = "010" else
-		const_1 when alu_b = "001" else
-		SE6_out when alu_b = "011" else
-		SE9_out when alu_b = "100" else
-		const_minus_1 when alu_b = "101"; 
+	alu_in_b <= T2_data when alu_b_select = "010" else
+		const_1 when alu_b_select = "001" else
+		SE6_out when alu_b_select = "011" else
+		SE9_out when alu_b_select = "100" else
+		const_minus_1 when alu_b_select = "101" else 
+		const_1; -- default 
 
 	alu_operation <= instruction_operation when alu_op = "10" else
 		alu_op;
@@ -212,26 +214,26 @@ begin
 		
 	--Register file input values based on the control signals
 	--A1
-	adr1_read <= T6_data when rf_a1 = "0" else
-		instruction(11 downto 9) when rf_a1 = "1";
+	adr1_read <= T6_data when rf_a1_select = "0" else
+		instruction(11 downto 9) when rf_a1_select = "1";
 	--A2
 	adr2_read <= instruction(8 downto 6);
 	--A3
-	adr3_write <= instruction(5 downto 3) when rf_a3 = "00" else
-		instruction(8 downto 6) when rf_a3 = "01" else
-		instruction(11 downto 9) when rf_a3 = "10" else
-		t6 when rf_a3 = "11";
+	adr3_write <= instruction(5 downto 3) when rf_a3_select = "00" else
+		instruction(8 downto 6) when rf_a3_select = "01" else
+		instruction(11 downto 9) when rf_a3_select = "10" else
+		t6 when rf_a3_select = "11";
 	--D3
-	data3_write <= data_extender9_out when rf_d3 = "00" else
-		T3_data when rf_d3 = "01" else
-		alu_out when rf_d3 = "10" else
-		mem_data_out when rf_d3 = "11";
+	data3_write <= data_extender9_out when rf_d3_select = "00" else
+		T3_data when rf_d3_select = "01" else
+		alu_out when rf_d3_select = "10" else
+		mem_data_out when rf_d3_select = "11";
 
 	--Memory signal values based on the control signals
 	mem_data_in <= data1_read;
-	mem_addr_in <= PC_out when mem_add = "00" else
-		T3_data when mem_add = "01" else
-		T5_data when mem_add = "10";
+	mem_addr_in <= PC_out when mem_add_select = "00" else
+		T3_data when mem_add_select = "01" else
+		T5_data when mem_add_select = "10";
 
 	--Priority circuit values based on the control signals
 	PE_in <= T4_data;

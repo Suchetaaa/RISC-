@@ -1,8 +1,6 @@
 library std;
 library ieee;
 use ieee.std_logic_1164.all;
-library work;
-use work.ProcessorComponents.all;
 
 entity data_extension is
   port (
@@ -16,7 +14,14 @@ end entity ; -- sign_extender_6
 architecture DE of data_extension is
 
 begin
-data_out(8 downto 0) <= data_in(8 downto 0);
-data_out(15 downto 9) <= "0000000";
+data_out(15 downto 7) <= data_in(8 downto 0);
+data_out(6) <= "0";
+data_out(5) <= "0";
+data_out(4) <= "0";
+data_out(3) <= "0";
+data_out(2) <= "0";
+data_out(1) <= "0";
+data_out(0) <= "0";
+
 
 end architecture ; -- DE
